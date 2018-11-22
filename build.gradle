@@ -12,8 +12,8 @@ plugins {
 }
 
 group = "info.digitalpoet.gradle"
-version = "0.0.1"
-def release_type = "Final"
+version = "0.0.2"
+def release_type = "Alpha"
 
 publishing {
     publications {
@@ -88,7 +88,7 @@ bintray {
         version {
             name = "${rootProject.version}-${release_type}"
             vcsTag = rootProject.version
-            desc = "First stable version"
+            desc = "Disable cache for run tasks everywere"
         }
     }
 }
