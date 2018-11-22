@@ -86,15 +86,9 @@ class CommandResult(
 
     fun hasSuccess(): Boolean = exitCode == 0
 
-    fun getStandardOutput(): String
-    {
-        return stackedStandardOutput.toString()
-    }
+    fun getStandardOutput(): String = stackedStandardOutput.toString()
 
-    fun getStandardError(): String
-    {
-        return stackedStandardError.toString()
-    }
+    fun getStandardError(): String = stackedStandardError.toString()
 
     //~ Operators ======================================================================================================
 }

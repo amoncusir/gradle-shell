@@ -1,0 +1,119 @@
+plugins {
+    
+    //Kotlin
+    id "org.jetbrains.kotlin.jvm" version "1.3.10"
+
+    // Quality check
+    id "io.gitlab.arturbosch.detekt" version "1.0.0-RC11"
+
+    // Publishers
+    id("com.jfrog.bintray") version "1.8.4"
+    id 'maven-publish'
+}
+
+group = "info.digitalpoet.gradle"
+version = "0.0.1"
+def release_type = "Final"
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            
+            from components.java
+            
+            groupId = rootProject.group
+            artifactId = rootProject.name
+            version = rootProject.version
+            
+            artifact project.sourcesJar {
+                classifier "sources"
+                extension "zip"
+            }
+            
+            pom {
+                name = "Gradle Shell"
+                description = "A gradle tasks for run commands in linux environments"
+                url = "https://github.com/amoncusir/gradle-shell"
+                
+                licenses {
+                    license {
+                        name = "GNU GENERAL PUBLIC LICENSE, Version 3, 29 June 2007"
+                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
+                    }
+                }
+                
+                developers {
+                    developer {
+                        id = "amoncusir"
+                        name = "Aran Moncusí"
+                        email = "amoncusir@gmail.com"
+                    }
+                }
+                
+                scm {
+                    connection = "scm:git:https://github.com/amoncusir/gradle-shell.git"
+                    url = "https://github.com/amoncusir/gradle-shell"
+                }
+            }
+        }
+    }
+    
+    repositories {
+        
+    }
+}
+
+bintray {
+    user = System.getenv("BINTRAY_USER")
+    key = System.getenv("BINTRAY_KEY")
+
+    publish = true
+    
+    publications = ['maven']
+
+    pkg {
+        repo = "gradle-utils"
+        name = "shell"
+        desc = "A gradle tasks for run commands in linux environments"
+
+        publicDownloadNumbers = true
+
+        licenses = ["AGPL-V3"]
+        labels = ["gradle", "shell", "bash", "linux", "kotlin"]
+
+        vcsUrl = "https://github.com/amoncusir/gradle-shell.git"
+        githubRepo = "amoncusir/gradle-shell"
+        githubReleaseNotesFile = "README.md"
+        
+        version {
+            name = "${rootProject.version}-${release_type}"
+            vcsTag = rootProject.version
+            desc = "First stable version"
+        }
+    }
+}
+
+repositories {
+    jcenter()
+    mavenCentral()
+}
+
+dependencies {
+    
+    // Gradle API
+    compile gradleApi()
+    
+    // Kotlin Dependencies
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    compile "org.jetbrains.kotlin:kotlin-reflect"
+}
+
+detekt {
+    parallel = true
+    config = files("${project.rootProject.projectDir.absolutePath}/detekt-config.yml")
+
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+}
