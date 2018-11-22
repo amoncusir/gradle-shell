@@ -32,6 +32,12 @@ open class Shell: DefaultTask()
 
     //~ Constructors ===================================================================================================
 
+    init
+    {
+        // Disable "cache" for run task always
+        outputs.upToDateWhen { false }
+    }
+
     //~ Open Methods ===================================================================================================
 
     //~ Methods ========================================================================================================
@@ -58,8 +64,7 @@ open class Shell: DefaultTask()
     private fun exec(args: List<String>): CommandResult
     {
         val command = Command(interpreter.plus(args).asList())
-        val directory: String? = if (runInsideProject) "${project.projectDir}/${cd ?: ""}"
-                        else cd
+        val directory: String? = if (runInsideProject) "${project.projectDir}/${cd ?: ""}" else cd
 
         directory?.apply { command.directory = File(this) }
 
